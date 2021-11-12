@@ -1,0 +1,82 @@
+<div class="row">
+    <div class="col-md-7">
+        <form class="form-inline">
+            <div class="form-group">
+                <input  placeholder="Search..."  type="text" ng-model="m" 
+                        autofocus
+                        class="form-control noprint"/>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-5" style="text-align: right;">
+        <a class="btn btn-success btn-xs" href="<?php echo URL_X . 'Versions/add_new'; ?>">Add new version</a>
+    </div>
+</div>
+<br/>
+
+<div class="row well noprint">
+        <h4>Versions</h4>
+        <p class="badge">Total versions: <?php echo $total_categories; ?></p>
+</div>
+
+<?php if($this->session->flashdata('message')){?>
+<div class="alert alert-success" role="alert">
+    <span class="glyphicon glyphicon-ok"></span>
+    <strong><?php echo $this->session->flashdata('message');?></strong>
+</div>
+<?php } ?>
+
+<div class="row" ng-controller="CategoryController">
+    <div class="col-md-3">
+        <table class="table table-hover table-striped">
+
+            <tr ng-repeat="category in categories|filter:m">
+                <td>
+                    <a href="<?php echo URL_X; ?>Versions?version={{category.product_category_name}}">
+                        {{category.product_category_name}}
+                    </a>
+                </td>
+
+                <td style="text-align: right;">
+                     <!--<a href="<?php echo URL_X . 'Set?category_id='; ?>{{category.id}}" class="btn  btn-info btn-xs">Preset</a>-->
+                    <a href="<?php echo URL_X . 'Versions/edit/'; ?>{{category.id}}" class="btn  btn-primary btn-xs">Edit</a>
+                    <a href="<?php echo URL_X . 'Versions/delete/'; ?>{{category.id}}" class="btn  btn-danger btn-xs">Delete</a>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <?php if(isset($products)){?>
+    <div class="col-md-9">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <td>Product Name</td>
+                    <td>Category</td>
+                </tr>
+            
+            </thead>
+            <tbody>
+            <?php foreach ($products as $p) { ?>
+            <tr>
+                <td><?php echo $p->product_name; ?></td>
+                <td><?php echo $p->product_category; ?></td>
+                
+            </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+    </div>
+    <?php } ?>
+</div>
+
+<script>
+    var app = angular.module('myapp', []);
+    app.controller('CategoryController', ['$scope', '$http', function ($scope, $http) {
+            $http.get('<?php echo $json_fetch_link; ?>').success(function (data) {
+                $scope.categories = data;
+                console.log("Categories = \n" + data);
+            });
+
+        }]);
+</script>
